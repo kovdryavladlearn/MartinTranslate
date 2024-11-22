@@ -5,7 +5,7 @@ using MartinTranslate.Application.TodoLists.Commands.CreateTodoList;
 using MartinTranslate.Domain.Entities;
 using MartinTranslate.Domain.Enums;
 
-using static Testing;
+using static MartinTranslate.Application.FunctionalTests.Testing;
 
 namespace MartinTranslate.Application.FunctionalTests.TodoItems.Commands;
 public class UpdateTodoItemDetailTests : BaseTestFixture

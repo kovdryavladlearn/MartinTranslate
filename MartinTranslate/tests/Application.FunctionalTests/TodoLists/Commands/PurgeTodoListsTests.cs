@@ -4,7 +4,7 @@ using MartinTranslate.Application.TodoLists.Commands.CreateTodoList;
 using MartinTranslate.Application.TodoLists.Commands.PurgeTodoLists;
 using MartinTranslate.Domain.Entities;
 
-using static Testing;
+using static MartinTranslate.Application.FunctionalTests.Testing;
 
 namespace MartinTranslate.Application.FunctionalTests.TodoLists.Commands;
 public class PurgeTodoListsTests : BaseTestFixture

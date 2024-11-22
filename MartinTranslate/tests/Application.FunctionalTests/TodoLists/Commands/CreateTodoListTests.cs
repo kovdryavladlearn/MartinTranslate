@@ -2,7 +2,7 @@
 using MartinTranslate.Application.TodoLists.Commands.CreateTodoList;
 using MartinTranslate.Domain.Entities;
 
-using static Testing;
+using static MartinTranslate.Application.FunctionalTests.Testing;
 
 namespace MartinTranslate.Application.FunctionalTests.TodoLists.Commands;
 public class CreateTodoListTests : BaseTestFixture

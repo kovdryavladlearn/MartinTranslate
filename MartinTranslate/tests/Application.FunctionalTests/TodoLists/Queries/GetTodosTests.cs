@@ -2,7 +2,7 @@
 using MartinTranslate.Domain.Entities;
 using MartinTranslate.Domain.ValueObjects;
 
-using static Testing;
+using static MartinTranslate.Application.FunctionalTests.Testing;
 
 namespace MartinTranslate.Application.FunctionalTests.TodoLists.Queries;
 public class GetTodosTests : BaseTestFixture
