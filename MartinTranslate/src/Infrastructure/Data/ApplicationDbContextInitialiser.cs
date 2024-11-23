@@ -42,6 +42,7 @@ public class ApplicationDbContextInitialiser
         try
         {
             await _context.Database.MigrateAsync();
+            _logger.LogInformation("Db migrations are done");
         }
         catch (Exception ex)
         {
@@ -55,6 +56,7 @@ public class ApplicationDbContextInitialiser
         try
         {
             await TrySeedAsync();
+            _logger.LogInformation("Db seed is done");
         }
         catch (Exception ex)
         {
@@ -65,43 +67,52 @@ public class ApplicationDbContextInitialiser
 
     public async Task TrySeedAsync()
     {
-        // Default roles
-        var administratorRole = new IdentityRole(Roles.Administrator);
+        await TrySeedDefaultRoles();
+        await TrySeedAdministrator();
+        await TrySeedTodoLists();
+    }
 
-        if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
+    private async Task TrySeedTodoLists()
+    {
+        if (_context.TodoLists.Any())
         {
-            await _roleManager.CreateAsync(administratorRole);
+            return;
         }
 
-        // Default users
+        _context.TodoLists.Add(new TodoList
+        {
+            Title = "Todo List",
+            Items =
+            {
+                new TodoItem { Title = "Make a todo list 📃" },
+                new TodoItem { Title = "Check off the first item ✅" },
+                new TodoItem { Title = "Realise you've already done two things on the list! 🤯"},
+                new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
+            }
+        });
+
+        await _context.SaveChangesAsync();
+    }
+
+    private async Task TrySeedAdministrator()
+    {
         var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
 
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
         {
             await _userManager.CreateAsync(administrator, "Administrator1!");
-            if (!string.IsNullOrWhiteSpace(administratorRole.Name))
-            {
-                await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
-            }
+
+            await _userManager.AddToRolesAsync(administrator, [ Roles.Administrator ]);
         }
+    }
 
-        // Default data
-        // Seed, if necessary
-        if (!_context.TodoLists.Any())
+    private async Task TrySeedDefaultRoles()
+    {
+        var administratorRole = new IdentityRole(Roles.Administrator);
+
+        if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
         {
-            _context.TodoLists.Add(new TodoList
-            {
-                Title = "Todo List",
-                Items =
-                {
-                    new TodoItem { Title = "Make a todo list 📃" },
-                    new TodoItem { Title = "Check off the first item ✅" },
-                    new TodoItem { Title = "Realise you've already done two things on the list! 🤯"},
-                    new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
-                }
-            });
-
-            await _context.SaveChangesAsync();
+            await _roleManager.CreateAsync(administratorRole);
         }
     }
 }
